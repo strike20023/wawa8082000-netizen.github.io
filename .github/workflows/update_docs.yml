@@ -1,69 +1,30 @@
-name: Update GitHub Pages Docs
+name: Deploy GitHub Pages docs
 
 on:
-  # 推送到main分支时触发
-  push:
-    branches:
-      - main
-    paths:
-      - 'info.xlsx'
-  
-  # 允许手动触发
   workflow_dispatch:
-  
-  # 定时触发（可选，例如每天UTC时间0点）
-  # schedule:
-  #   - cron: '0 0 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
 
-# 设置权限
 permissions:
   contents: write
 
 jobs:
-  update-docs:
+  validate-and-deploy:
     runs-on: ubuntu-latest
-    
     steps:
-      # 检出代码
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      # 设置Python环境
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          python-version: '3.12'  # 根据需要修改版本
-      
-      # 安装依赖
-      - name: Install dependencies
+          node-version: '22'
+      - name: Validate generated site
         run: |
-          python -m pip install --upgrade pip
-          pip install pandas openpyxl jinja2
-      
-      # 运行Python脚本生成文档
-      - name: Run Python script
-        run: |
-          python scripts/update_docs.py
-      
-      # 提交更改到docs目录
-      - name: Commit changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add docs/
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update docs [skip ci]"
-      
-      # 推送更改
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
-      # 部署到GitHub Pages
-      - name: Deploy to GitHub Pages
+          node scripts/check-file-sizes.mjs --all
+          node scripts/validate-site.mjs
+      - name: Deploy docs to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
-          publish_branch: gh-pages  # Pages分支
+          publish_branch: gh-pages

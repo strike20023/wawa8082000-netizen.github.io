@@ -1,0 +1,20 @@
+{
+  "name": "NocoDB Git Workspace",
+  "image": "ghcr.io/strike20023/nocodb-git:latest",
+  "overrideCommand": false,
+  "containerEnv": {
+    "NC_APP_DATA_DIR": "/workspaces/${localWorkspaceFolderBasename}/.nocodb",
+    "NC_ATTACHMENT_FIELD_SIZE": "99614720",
+    "NC_WEBHOOK_ALLOW_PRIVATE_NETWORK": "true",
+    "PUBLISH_SITE_URL": "https://strike20023.github.io/wawa8082000-netizen.github.io",
+    "MAX_FILE_BYTES": "99614720"
+  },
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "NocoDB",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postStartCommand": "bash .devcontainer/start.sh"
+}
