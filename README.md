@@ -1,6 +1,6 @@
 # 解谜提示网站
 
-这个仓库使用 NocoDB 编辑提示内容。编辑者只需要填写一张表、上传可选附件，然后点击“发布网站”。发布器会直接生成 `docs/`、提交并推送，GitHub Pages 随后部署公开页面。
+这个仓库使用 NocoDB 编辑提示内容。Codespaces 本身使用标准 Ubuntu/Node 开发环境，启动后在后台运行未经修改的官方 NocoDB Docker 镜像。编辑者只需要填写一张表、上传可选附件，然后点击“发布网站”。发布器会直接生成 `docs/`、提交并推送，GitHub Pages 随后部署公开页面。
 
 ## 编辑者使用方法
 
@@ -46,18 +46,25 @@ NOCODB_TABLE_ID
 
 ```text
 Method: POST
-URL: http://127.0.0.1:8787/publish
+URL: http://host.docker.internal:8787/publish
 ```
 
-不需要配置 Header 或发布密码。发布服务只监听容器内部的 `127.0.0.1`，不会作为 Codespaces 端口公开。按钮触发后会立即返回，后台继续生成和推送。可以在 Codespace 终端查看状态：
+不需要配置 Header 或发布密码。`8787` 不会作为 Codespaces 端口公开，只供 NocoDB Docker 容器调用。按钮触发后会立即返回，后台继续生成和推送。可以在 Codespace 终端查看状态：
 
 ```bash
 curl http://127.0.0.1:8787/status
 ```
 
-### 3. 首次构建 Codespaces 镜像
+### 3. 启动 Codespace
 
-手动运行 GitHub Actions 中的 **Build NocoDB Codespaces image**。镜像生成后，确保 `ghcr.io/strike20023/nocodb-git:latest` 对该仓库的 Codespaces 可读，然后创建 Codespace。
+创建或重建 Codespace 即可。开发环境直接使用预构建的 Universal Ubuntu 镜像，其中已经包含 Node、Git 和 Docker，不运行 `npm install`。NocoDB 官方镜像会在后台拉取并启动，因此不阻塞编辑器打开；首次打开 8080 端口时可能仍需等待镜像下载。
+
+NocoDB 的 SQLite 数据和附件保存在仓库工作区的 `data/`，并挂载到容器的 `/usr/app/data`。该目录不会提交到 Git。可在终端查看镜像拉取/启动日志和 NocoDB 运行日志：
+
+```bash
+tail -f /tmp/wawa-nocodb.log
+docker logs -f wawa-nocodb
+```
 
 ## 本地维护命令
 

@@ -19,6 +19,15 @@ if [[ -f .env.local ]]; then
   set +a
 fi
 
+# The NocoDB sibling container reaches the publisher through Docker's host gateway.
+export PUBLISH_HOST=0.0.0.0
+
+nocodb_launcher_pid_file="/tmp/wawa-nocodb-launcher.pid"
+if [[ ! -f "$nocodb_launcher_pid_file" ]] || ! kill -0 "$(<"$nocodb_launcher_pid_file")" 2>/dev/null; then
+  nohup bash .devcontainer/start-nocodb.sh >/tmp/wawa-nocodb.log 2>&1 &
+  echo "$!" >"$nocodb_launcher_pid_file"
+fi
+
 publisher_pid_file="/tmp/wawa-nocodb-publisher.pid"
 if [[ -f "$publisher_pid_file" ]] && kill -0 "$(cat "$publisher_pid_file")" 2>/dev/null; then
   exit 0
