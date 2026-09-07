@@ -61,6 +61,15 @@ curl http://127.0.0.1:8787/status
 
 NocoDB 的 SQLite 数据和附件保存在仓库工作区的 `data/`，并挂载到容器的 `/usr/app/data`。该目录不会提交到 Git。可在终端查看镜像拉取/启动日志和 NocoDB 运行日志：
 
+固定管理员登录信息：
+
+```text
+邮箱：admin@example.com
+密码：Wawa8082000!
+```
+
+启动器会把这两个值传给 NocoDB 的 `NC_ADMIN_EMAIL` 和 `NC_ADMIN_PASSWORD`。已有数据不会被清空；如果管理员信息不同，NocoDB 会使用固定值更新超级管理员登录信息。
+
 ```bash
 tail -f /tmp/wawa-nocodb.log
 docker logs -f wawa-nocodb
