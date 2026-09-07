@@ -36,7 +36,6 @@
 NOCODB_API_TOKEN
 NOCODB_BASE_ID
 NOCODB_TABLE_ID
-PUBLISH_WEBHOOK_SECRET
 ```
 
 如果不使用 Codespaces secrets，也可以复制 `.env.example` 为 `.env.local`。不要提交 `.env.local`。
@@ -48,10 +47,9 @@ PUBLISH_WEBHOOK_SECRET
 ```text
 Method: POST
 URL: http://127.0.0.1:8787/publish
-Header: X-Publish-Token: <PUBLISH_WEBHOOK_SECRET 的值>
 ```
 
-按钮触发后会立即返回，后台继续生成和推送。可以在 Codespace 终端查看状态：
+不需要配置 Header 或发布密码。发布服务只监听容器内部的 `127.0.0.1`，不会作为 Codespaces 端口公开。按钮触发后会立即返回，后台继续生成和推送。可以在 Codespace 终端查看状态：
 
 ```bash
 curl http://127.0.0.1:8787/status
