@@ -1,6 +1,5 @@
 {
   "name": "NocoDB Git Workspace",
-  "image": "mcr.microsoft.com/devcontainers/universal:linux",
   "containerEnv": {
     "PUBLISH_SITE_URL": "https://strike20023.github.io/wawa8082000-netizen.github.io",
     "PUBLISH_HOST": "0.0.0.0",

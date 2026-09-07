@@ -1,6 +1,6 @@
 # 解谜提示网站
 
-这个仓库使用 NocoDB 编辑提示内容。Codespaces 本身使用标准 Ubuntu/Node 开发环境，启动后在后台运行未经修改的官方 NocoDB Docker 镜像。编辑者只需要填写一张表、上传可选附件，然后点击“发布网站”。发布器会直接生成 `docs/`、提交并推送，GitHub Pages 随后部署公开页面。
+这个仓库使用 NocoDB 编辑提示内容。Codespaces 使用 GitHub 默认开发环境，启动后在后台运行未经修改的官方 NocoDB Docker 镜像。编辑者只需要填写一张表、上传可选附件，然后点击“发布网站”。发布器会直接生成 `docs/`、提交并推送，GitHub Pages 随后部署公开页面。
 
 ## 编辑者使用方法
 
@@ -57,7 +57,7 @@ curl http://127.0.0.1:8787/status
 
 ### 3. 启动 Codespace
 
-创建或重建 Codespace 即可。开发环境直接使用预构建的 Universal Ubuntu 镜像，其中已经包含 Node、Git 和 Docker，不运行 `npm install`。NocoDB 官方镜像会在后台拉取并启动，因此不阻塞编辑器打开；首次打开 8080 端口时可能仍需等待镜像下载。
+创建或重建 Codespace 即可。配置没有指定基础镜像，GitHub 会使用默认 Codespaces 环境；其中已经包含 Node、Git 和 Docker，不需要配置 Node，也不运行 `npm install`。NocoDB 官方镜像会在后台拉取并启动，因此不阻塞编辑器打开；首次打开 8080 端口时可能仍需等待镜像下载。
 
 NocoDB 的 SQLite 数据和附件保存在仓库工作区的 `data/`，并挂载到容器的 `/usr/app/data`。该目录不会提交到 Git。可在终端查看镜像拉取/启动日志和 NocoDB 运行日志：
 
